@@ -19,6 +19,9 @@ const Navbar = ({ user, setUser }) => {
           {user ? (
             <>
               <Link to="/dashboard" className="nav-link">Dashboard</Link>
+              {user.role === 'admin' && (
+                <Link to="/admin" className="nav-link">Admin</Link>
+              )}
               <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '0.4rem 1rem' }}>Logout</button>
             </>
           ) : (

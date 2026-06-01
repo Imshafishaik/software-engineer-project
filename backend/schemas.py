@@ -11,8 +11,7 @@ class UserCreate(UserBase):
 
 class UserResponse(UserBase):
     id: int
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}
 
 class Token(BaseModel):
     access_token: str
@@ -33,8 +32,7 @@ class VehicleCreate(VehicleBase):
 class VehicleResponse(VehicleBase):
     id: int
     owner_id: int
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}
 
 class BookingBase(BaseModel):
     vehicle_id: int
@@ -48,5 +46,4 @@ class BookingResponse(BookingBase):
     id: int
     rider_id: int
     status: str
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}

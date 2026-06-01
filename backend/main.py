@@ -77,7 +77,7 @@ def get_vehicles(db: Session = Depends(get_db)):
 def create_vehicle(vehicle: schemas.VehicleCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     if current_user.role != "owner":
         raise HTTPException(status_code=403, detail="Only owners can add vehicles")
-    db_vehicle = models.Vehicle(**vehicle.dict(), owner_id=current_user.id)
+    db_vehicle = models.Vehicle(**vehicle.model_dump(), owner_id=current_user.id)
     db.add(db_vehicle)
     db.commit()
     db.refresh(db_vehicle)
@@ -87,7 +87,7 @@ def create_vehicle(vehicle: schemas.VehicleCreate, db: Session = Depends(get_db)
 def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     if current_user.role != "rider":
         raise HTTPException(status_code=403, detail="Only riders can book vehicles")
-    db_booking = models.Booking(**booking.dict(), rider_id=current_user.id)
+    db_booking = models.Booking(**booking.model_dump(), rider_id=current_user.id)
     db.add(db_booking)
     db.commit()
     db.refresh(db_booking)
@@ -102,3 +102,56 @@ def get_my_bookings(db: Session = Depends(get_db), current_user: models.User = D
         vehicles = db.query(models.Vehicle).filter(models.Vehicle.owner_id == current_user.id).all()
         vehicle_ids = [v.id for v in vehicles]
         return db.query(models.Booking).filter(models.Booking.vehicle_id.in_(vehicle_ids)).all()
+
+# Admin endpoints
+@app.get("/admin/users", response_model=list[schemas.UserResponse])
+def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can view all users")
+    return db.query(models.User).all()
+
+@app.get("/admin/vehicles", response_model=list[schemas.VehicleResponse])
+def get_all_vehicles_admin(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can view all vehicles")
+    return db.query(models.Vehicle).all()
+
+@app.get("/admin/bookings", response_model=list[schemas.BookingResponse])
+def get_all_bookings_admin(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can view all bookings")
+    return db.query(models.Booking).all()
+
+@app.delete("/admin/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can delete users")
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+
+@app.delete("/admin/vehicles/{vehicle_id}")
+def delete_vehicle(vehicle_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can delete vehicles")
+    vehicle = db.query(models.Vehicle).filter(models.Vehicle.id == vehicle_id).first()
+    if not vehicle:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+    db.delete(vehicle)
+    db.commit()
+    return {"message": "Vehicle deleted successfully"}
+
+@app.put("/admin/bookings/{booking_id}/status")
+def update_booking_status(booking_id: int, status: str, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can update booking status")
+    booking = db.query(models.Booking).filter(models.Booking.id == booking_id).first()
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    booking.status = status
+    db.commit()
+    db.refresh(booking)
+    return booking

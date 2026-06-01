@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import BookVehicle from './pages/BookVehicle';
+import AdminDashboard from './pages/AdminDashboard';
 import api from './api';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard user={user} />} />
+            <Route path="/admin" element={<AdminDashboard user={user} />} />
             <Route path="/book/:id" element={<BookVehicle user={user} />} />
           </Routes>
         </main>
