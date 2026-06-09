@@ -4,7 +4,7 @@ from schemas.vehicle_schema import VehicleCreate, VehicleUpdate
 
 
 def create_vehicle(vehicle_data: VehicleCreate, db: Session) -> Vehicle:
-    db_vehicle = Vehicle(**vehicle_data.dict())
+    db_vehicle = Vehicle(**vehicle_data.model_dump())
     db.add(db_vehicle)
     db.commit()
     db.refresh(db_vehicle)
@@ -29,7 +29,7 @@ def update_vehicle(vehicle_id: int, vehicle_data: VehicleUpdate, db: Session) ->
     if not db_vehicle:
         raise ValueError("Vehicle not found")
     
-    update_data = vehicle_data.dict(exclude_unset=True)
+    update_data = vehicle_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(db_vehicle, field, value)
     
