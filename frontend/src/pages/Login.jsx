@@ -11,17 +11,14 @@ const Login = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new URLSearchParams();
-      formData.append('username', email);
-      formData.append('password', password);
-      
-      const res = await api.post('/token', formData, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      const res = await api.post('/api/auth/login', {
+        username: email,
+        password,
       });
       
       localStorage.setItem('token', res.data.access_token);
       
-      const userRes = await api.get('/users/me');
+      const userRes = await api.get('/api/users/me');
       setUser(userRes.data);
       navigate('/dashboard');
     } catch (err) {

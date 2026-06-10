@@ -18,7 +18,7 @@ const BookVehicle = ({ user }) => {
     }
 
     // Since we don't have a single vehicle endpoint, we get all and filter
-    api.get('/vehicles')
+    api.get('/api/vehicles')
       .then(res => {
         const found = res.data.find(v => v.id === parseInt(id));
         setVehicle(found);
@@ -29,7 +29,7 @@ const BookVehicle = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/bookings', {
+      await api.post('/api/bookings', {
         vehicle_id: parseInt(id),
         start_date: startDate,
         end_date: endDate

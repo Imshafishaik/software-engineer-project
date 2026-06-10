@@ -20,7 +20,7 @@ def get_vehicle_by_id(vehicle_id: int, db: Session) -> Vehicle:
 
 
 def get_available_vehicles(db: Session):
-    return db.query(Vehicle).filter(Vehicle.is_available == True).all()
+    return db.query(Vehicle).all()
 
 
 def update_vehicle(vehicle_id: int, vehicle_data: VehicleUpdate, db: Session) -> Vehicle:

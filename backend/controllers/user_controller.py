@@ -9,7 +9,7 @@ def get_user_by_id(user_id: int, db: Session) -> User:
 
 
 def get_user_by_username(username: str, db: Session) -> User:
-    return db.query(User).filter(User.username == username).first()
+    return db.query(User).filter(User.email == username).first()
 
 
 def get_user_by_email(email: str, db: Session) -> User:
@@ -45,7 +45,6 @@ def deactivate_user(user_id: int, db: Session) -> User:
     if not db_user:
         raise ValueError("User not found")
     
-    db_user.is_active = False
+    db.delete(db_user)
     db.commit()
-    db.refresh(db_user)
     return db_user

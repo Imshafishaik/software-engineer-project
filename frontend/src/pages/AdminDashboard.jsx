@@ -27,9 +27,9 @@ const AdminDashboard = ({ user }) => {
 
   const fetchAllData = () => {
     Promise.all([
-      api.get('/admin/users'),
-      api.get('/admin/vehicles'),
-      api.get('/admin/bookings')
+      api.get('/api/admin/users'),
+      api.get('/api/admin/vehicles'),
+      api.get('/api/admin/bookings')
     ])
       .then(([usersRes, vehiclesRes, bookingsRes]) => {
         setUsers(usersRes.data);
@@ -45,7 +45,7 @@ const AdminDashboard = ({ user }) => {
 
   const handleDeleteUser = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      api.delete(`/admin/users/${userId}`)
+      api.delete(`/api/admin/users/${userId}`)
         .then(() => {
           setUsers(users.filter(u => u.id !== userId));
         })
@@ -55,7 +55,7 @@ const AdminDashboard = ({ user }) => {
 
   const handleDeleteVehicle = (vehicleId) => {
     if (window.confirm('Are you sure you want to delete this vehicle?')) {
-      api.delete(`/admin/vehicles/${vehicleId}`)
+      api.delete(`/api/admin/vehicles/${vehicleId}`)
         .then(() => {
           setVehicles(vehicles.filter(v => v.id !== vehicleId));
         })
@@ -64,7 +64,7 @@ const AdminDashboard = ({ user }) => {
   };
 
   const handleUpdateBookingStatus = (bookingId, status) => {
-    api.put(`/admin/bookings/${bookingId}/status?status=${status}`)
+    api.put(`/api/admin/bookings/${bookingId}/status?status=${status}`)
       .then(res => {
         setBookings(bookings.map(b => b.id === bookingId ? res.data : b));
       })

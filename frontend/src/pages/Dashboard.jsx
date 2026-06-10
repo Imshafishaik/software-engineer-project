@@ -14,7 +14,7 @@ const Dashboard = ({ user }) => {
       return;
     }
     
-    api.get('/bookings/me')
+    api.get('/api/bookings/me')
       .then(res => {
         setBookings(res.data);
         setLoading(false);

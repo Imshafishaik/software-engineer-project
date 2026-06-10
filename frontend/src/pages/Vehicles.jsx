@@ -7,7 +7,7 @@ const Vehicles = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/vehicles')
+    api.get('/api/vehicles')
       .then(res => {
         setVehicles(res.data);
         setLoading(false);

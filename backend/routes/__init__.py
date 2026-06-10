@@ -1,3 +1,3 @@
-from routes import auth_routes, vehicle_routes, user_routes
+from routes import admin_routes, auth_routes, booking_routes, vehicle_routes, user_routes
 
-__all__ = ["auth_routes", "vehicle_routes", "user_routes"]
+__all__ = ["admin_routes", "auth_routes", "booking_routes", "vehicle_routes", "user_routes"]

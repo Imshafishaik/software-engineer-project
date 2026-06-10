@@ -1,38 +1,36 @@
 from pydantic import BaseModel
-from datetime import datetime
 from typing import Optional
 
 
 class VehicleBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-    vehicle_type: str
-    license_plate: str
+    make: str
+    model: str
+    year: int
     price_per_day: float
-    price_per_hour: float
-    location: str
+    accessibility_features: Optional[str] = None
     image_url: Optional[str] = None
+    description: Optional[str] = None
 
 
 class VehicleCreate(VehicleBase):
+    owner_id: int
     pass
 
 
 class VehicleUpdate(BaseModel):
-    name: Optional[str] = None
+    owner_id: Optional[int] = None
+    make: Optional[str] = None
+    model: Optional[str] = None
+    year: Optional[int] = None
     description: Optional[str] = None
     price_per_day: Optional[float] = None
-    price_per_hour: Optional[float] = None
-    location: Optional[str] = None
+    accessibility_features: Optional[str] = None
     image_url: Optional[str] = None
-    is_available: Optional[bool] = None
 
 
 class VehicleResponse(VehicleBase):
     id: int
-    is_available: bool
-    created_at: datetime
-    updated_at: datetime
+    owner_id: int
 
     class Config:
         from_attributes = True
