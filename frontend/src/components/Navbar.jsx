@@ -19,6 +19,9 @@ const Navbar = ({ user, setUser }) => {
           {user ? (
             <>
               <Link to="/dashboard" className="nav-link">Dashboard</Link>
+              {user.role === 'owner' && (
+                <Link to="/owner" className="nav-link">My Vehicles</Link>
+              )}
               {user.role === 'admin' && (
                 <Link to="/admin" className="nav-link">Admin</Link>
               )}
